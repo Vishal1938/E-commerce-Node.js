@@ -1,19 +1,38 @@
 const mongoose = require("mongoose");
 
-// creating product schema
+// Product schema
 const productSchema = new mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
-    name: {
-        type: String,
-        required: true,
-    },
-    quantity: {
-        type: Number,
-        default: 1,
-    }
+  name: {
+    type: String,
+    required: true,
+    trim: true, // Remove leading/trailing whitespace
+    minlength: 1, // Enforce a minimum length for better data integrity
+    maxlength: 255, // Set a reasonable maximum length to prevent bloat
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    min: 0, // Ensure quantity is non-negative
+    default: 0, // Set default to 0 for consistency (adjustable based on needs)
+  },
+
+  createdAt: {
+    type: Date,
+    default: Date.now, // Timestamp for creation time
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now, // Timestamp for updates
+  },
 });
 
-//exporting productSchema as Produt
-const Product = new mongoose.model('Product', productSchema);
+// Optional: Add timestamps for automatic updates
+productSchema.pre('save', function (next) {
+  this.updatedAt = Date.now();
+  next();
+});
+
+// Create the Product model
+const Product = mongoose.model('Product', productSchema);
+
 module.exports = Product;
-//module.exports = mongoose.model("Product", productSchema);

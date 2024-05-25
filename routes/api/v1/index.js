@@ -3,8 +3,8 @@ const router = express.Router();
 
 
 
-// handling requests
-router.use("/products", require("./products"));
+// request handler
+router.use("/products", require("./productsRoutes"));
 
 
 
